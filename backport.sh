@@ -84,7 +84,7 @@ for branch in $(git branch -r | grep ${BACKPORT_BRANCHES_REGEX} | sed 's/origin\
     git push -f origin auto-${branch}
 
     echo "Create PR"
-    response=$(curl -X POST \
+    response=$(curl -v -X POST \
       "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?access_token=$GITHUB_ACCESS_TOKEN" \
       -H 'Content-Type: application/json' \
       -H "Authorization: Bearer ${GITHUB_ACCESS_TOKEN}" \
@@ -101,7 +101,8 @@ for branch in $(git branch -r | grep ${BACKPORT_BRANCHES_REGEX} | sed 's/origin\
       echo "Add reviewers"
       pull_request_id=$(echo "$response" | jq .number)
       echo "pull request ID: ${pull_request_id}"
-      curl -X POST \
+      echo "Request body \"{ ${reviewers} }\""
+      curl -v -X POST \
         "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${pull_request_id}/requested_reviewers?access_token=$GITHUB_ACCESS_TOKEN" \
         -H 'Content-Type: application/json' \
         -H "Authorization: Bearer ${GITHUB_ACCESS_TOKEN}" \
