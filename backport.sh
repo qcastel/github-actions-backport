@@ -69,7 +69,7 @@ fi
 echo "The reviewers for those PRs: $reviewers"
 
 echo "Show how the remote are setup"
-git remote -r
+git remote -v
 
 echo "Create the backport PR for each of the ${BACKPORT_BRANCHES_REGEX} branches"
 # Cherry pick master in every select branches and create a PR
