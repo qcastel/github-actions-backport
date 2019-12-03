@@ -97,7 +97,7 @@ for branch in $(git branch -r | grep ${BACKPORT_BRANCHES_REGEX} | sed 's/origin\
 
     if [[ -n $reviewers ]]; then
       echo "Add reviewers"
-      pull_request_id=$(echo response | jq .number)
+      pull_request_id=$(echo "$response" | jq .number)
       curl -X POST \
         "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${pull_request_id}/requested_reviewers?access_token=$GITHUB_ACCESS_TOKEN" \
         -H 'Content-Type: application/json' \
