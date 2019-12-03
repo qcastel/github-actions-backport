@@ -22,6 +22,17 @@ git config --global user.name "$GIT_RELEASE_BOT_NAME";
 echo "Setup git user email to '$GIT_RELEASE_BOT_EMAIL'"
 git config --global user.email "$GIT_RELEASE_BOT_EMAIL";
 
+# Set up .netrc file with GitHub credentials
+cat <<- EOF > $HOME/.netrc
+    machine github.com
+    login $GIT_RELEASE_BOT_NAME
+    password $GITHUB_ACCESS_TOKEN
+    machine api.github.com
+    login $GIT_RELEASE_BOT_NAME
+    password $GITHUB_ACCESS_TOKEN
+EOF
+chmod 600 $HOME/.netrc
+
 # Setup GPG
 echo "GPG_ENABLED '$GPG_ENABLED'"
 if [[ $GPG_ENABLED == "true" ]]; then
@@ -57,12 +68,22 @@ else
 fi
 echo "The reviewers for those PRs: $reviewers"
 
+echo "Show how the remote are setup"
+git remote -r
 
+echo "Create the backport PR for each of the ${BACKPORT_BRANCHES_REGEX} branches"
 # Cherry pick master in every select branches and create a PR
 for branch in $(git branch -r | grep ${BACKPORT_BRANCHES_REGEX} | sed 's/origin\///'); do
+    echo "Backporting to branch ¢{branch}"
     git checkout -b auto-${branch} origin/${branch}
+
+    echo "Cherry-pick the latest commit"
     git cherry-pick ${GITHUB_SHA}
+
+    echo "Push branch to upstream"
     git push -f origin auto-${branch}
+
+    echo "Create PR"
     response=$(curl -X POST \
       "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?access_token=$GITHUB_ACCESS_TOKEN" \
       -H 'Content-Type: application/json' \
@@ -73,7 +94,9 @@ for branch in $(git branch -r | grep ${BACKPORT_BRANCHES_REGEX} | sed 's/origin\
             \"head\": \"auto-${branch}\",
             \"base\": \"${branch}\"
           }")
+
     if [[ -z $reviewers ]]; then
+      echo "Add reviewers"
       pull_request_id=$(echo response | jq .number)
       curl -X POST \
         "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${pull_request_id}/requested_reviewers?access_token=$GITHUB_ACCESS_TOKEN" \
