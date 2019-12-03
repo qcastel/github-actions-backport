@@ -61,11 +61,11 @@ runs:
 
     GITHUB_ACCESS_TOKEN: ${{ inputs.access-token }}
 
-    BACKPORT_BRANCHES_REGEX: ${{ input.backport-branches-regex}}
+    BACKPORT_BRANCHES_REGEX: ${{ inputs.backport-branches-regex}}
 
-    REVIEWERS_USERS: ${{ input.reviewers-users}}
-    REVIEWERS_TEAMS: ${{ input.reviewers-teams}}
+    REVIEWERS_USERS: ${{ inputs.reviewers-users}}
+    REVIEWERS_TEAMS: ${{ inputs.reviewers-teams}}
 
-    PR_BODY: ${{ input.pr-body}}
-    PR_TITLE: ${{ input.pr-title}}
+    PR_BODY: ${{ inputs.pr-body}}
+    PR_TITLE: ${{ inputs.pr-title}}
 
