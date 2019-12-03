@@ -33,7 +33,7 @@ To add default user reviewers to the PR:
       with:
         backport-branches-regex: "releases*"
 
-        reviewers-users: ['alice', 'bob']
+        reviewers-users: "['alice', 'bob']"
         
         git-release-bot-name: "release-bot"
         git-release-bot-email: "release-bot@example.com"
@@ -50,7 +50,7 @@ To add default team reviewers to the PR:
       with:
         backport-branches-regex: "releases*"
 
-        reviewers-teams: ['team-a']
+        reviewers-teams: "['team-a']"
         
         git-release-bot-name: "release-bot"
         git-release-bot-email: "release-bot@example.com"
