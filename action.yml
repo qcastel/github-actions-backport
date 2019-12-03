@@ -1,0 +1,71 @@
+# action.yml
+name: 'Backport commit'
+author: https://github.com/qcastel
+description: 'Backport your latest commit to other branches'
+branding:
+  color: blue
+  icon: unlock
+inputs:
+  gpg-enabled:
+    description: 'Enable gpg signing'
+    required: false
+    default: false
+  gpg-key-id: 
+    description: 'The GPG key ID'
+    required: false
+  gpg-key: 
+    description: 'The GPG key'
+    required: false
+
+  git-release-bot-name:
+    description: 'The git user name for committing the release'
+    required: true
+  git-release-bot-email:
+    description: 'The git user email for committing the release'
+    required: true
+
+  access-token:
+    description: 'Github access token. https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line'
+    required: true
+
+  backport-branches-regex:
+    description: 'The regex to match the backport branches. ps: we use grep for that'
+    required: true
+
+  reviewers-users:
+    description: 'An array of user logins that will be requested to review the PR'
+    required: false
+  reviewers-teams:
+    description: 'AAn array of team slugs that will be requested to review the PR'
+    required: false
+
+  pr-body:
+    description: 'The body to define for the PRs created'
+    default: "Auto cherry-pick made by release bot. Will auto-merge if build pass"
+  pr-title:
+    description: 'The body to define for the PRs created'
+    default: "Auto cherry-pick made by release bot. Will auto-merge if build pass"
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args: 
+    - backport.sh
+  env:
+    GPG_ENABLED: ${{ inputs.gpg-enabled }}
+    GPG_KEY_ID: ${{ inputs.gpg-key-id }}
+    GPG_KEY: ${{ inputs.gpg-key }}
+
+    GIT_RELEASE_BOT_NAME: ${{ inputs.git-release-bot-name }}
+    GIT_RELEASE_BOT_EMAIL: ${{ inputs.git-release-bot-email }}
+
+    GITHUB_ACCESS_TOKEN: ${{ inputs.access-token }}
+
+    BACKPORT_BRANCHES_REGEX: ${{ input.backport-branches-regex}}
+
+    REVIEWERS_USERS: ${{ input.reviewers-users}}
+    REVIEWERS_TEAMS: ${{ input.reviewers-teams}}
+
+    PR_BODY: ${{ input.pr-body}}
+    PR_TITLE: ${{ input.pr-title}}
+
