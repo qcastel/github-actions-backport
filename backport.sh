@@ -95,7 +95,7 @@ for branch in $(git branch -r | grep ${BACKPORT_BRANCHES_REGEX} | sed 's/origin\
             \"base\": \"${branch}\"
           }")
 
-    if [[ -z $reviewers ]]; then
+    if [[ -n $reviewers ]]; then
       echo "Add reviewers"
       pull_request_id=$(echo response | jq .number)
       curl -X POST \
