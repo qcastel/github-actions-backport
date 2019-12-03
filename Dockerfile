@@ -1,3 +1,3 @@
 FROM qcastel/maven-git-gpg:latest
 
-COPY ./release.sh /usr/local/bin
+COPY ./backport.sh /usr/local/bin
