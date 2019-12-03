@@ -67,7 +67,7 @@ To setup the bot to sign commits:
       with:
         backport-branches-regex: "releases*"
 
-        reviewers-teams: ['team-a']
+        reviewers-teams: "['team-a']"
         
         git-release-bot-name: "release-bot"
         git-release-bot-email: "release-bot@example.com"
