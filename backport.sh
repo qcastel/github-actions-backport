@@ -2,11 +2,10 @@
 set -e
 
 # avoid the release loop by checking if the latest commit is a release commit
-readonly local last_release_commit_hash=$(git log --author="$GIT_RELEASE_BOT_NAME" --pretty=format:"%H" -1)
-echo "Last $GIT_RELEASE_BOT_NAME commit: ${last_release_commit_hash}"
-echo "Current commit: ${GITHUB_SHA}"
-if [[ "${last_release_commit_hash}" = "${GITHUB_SHA}" ]]; then
-     echo "Skipping for $GIT_RELEASE_BOT_NAME commit"
+readonly local last_commit_author=$(git --no-pager show -s --format='%an' "${GITHUB_SHA}")
+echo "Last commit author: ${last_commit_author}"
+if [[ "${last_commit_author}" == "${GIT_RELEASE_BOT_NAME}" ]]; then
+     echo "Skipping current commit, as the author is the bot '${GIT_RELEASE_BOT_NAME}'"
      exit 0
 fi
 
